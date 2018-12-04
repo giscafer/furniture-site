@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,
+            initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="stylesheet" href="/admin/plugins/mescroll/mescroll.min.css">
+        <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: white
+        }
+
+        ul {
+            list-style-type: none
+        }
+
+        a {
+            text-decoration: none;
+            color: #18B4FE;
+        }
+
+        /*模拟的标题*/
+        .header {
+            z-index: 9990;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            line-height: 16px;
+            padding-top: 12px;
+            text-align: center;
+            background-color: white;
+        }
+
+        .header .btn-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 12px;
+        }
+
+        .header .btn-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 12px 6px;
+        }
+
+        .header .tip {
+            margin-top: 4px;
+            font-size: 12px;
+            color: gray;
+        }
+
+        /*菜单*/
+        .header .nav {
+            margin-top: 18px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .header .nav p {
+            display: inline-block;
+            width: 30%;
+            padding: 5px 0;
+        }
+
+        .header .nav .active {
+            border-bottom: 1px solid #FF6990;
+            color: #FF6990;
+        }
+
+        /*列表*/
+        .mescroll {
+            position: fixed;
+            top: 84px;
+            bottom: 0;
+            height: auto;
+        }
+
+        /*展示上拉加载的数据列表*/
+        .data-list li {
+            position: relative;
+            padding: 10px 8px 10px 120px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-list .pd-img {
+            position: absolute;
+            left: 18px;
+            top: 18px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .data-list .pd-name {
+            font-size: 16px;
+            line-height: 20px;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .data-list .pd-price {
+            margin-top: 8px;
+            color: red;
+        }
+
+        .data-list .text {
+            font-size: 14px;
+        }
+
+        .data-list .operate-btn {
+            font-size: 14px;
+            position: absolute;
+            right: 25px;
+            top: 47px;
+            padding: 1px 5px;
+            border: solid 1px #18B4FE
+        }
+
+        .data-list .car-type {
+            position: absolute;
+            left: 15px;
+            top: 110px;
+            color: rgb(0, 89, 255);
+            font-size: 14px;
+            text-decoration: underline;
+        }
+
+        .data-list .pd-sold {
+            font-size: 12px;
+            margin-top: 8px;
+            color: gray;
+        }
+    </style>
+    </head>
+
+    <body>
+        <!--标题-->
+        <div class="header">
+            <a class="btn-left" href="javascript:void(0)">@giscafer</a>
+            <p>产品列表</p>
+            <a class="btn-right" href="#">购前阅读</a>
+            <!--菜单-->
+            <div class="nav">
+                <p i="0" class="active" category="family">饭团产品(<span
+                        id="family_count">0</span>)</p>
+                <p i="0" category="factory">工厂产品(<span id="factory_count">0</span>)</p>
+                <p i="1">已售产品</p>
+            </div>
+        </div>
+        <!--滑动区域-->
+        <div id="mescroll" class="mescroll">
+            <!--展示上拉加载的数据列表-->
+            <ul id="dataList" class="data-list">
+
+            </ul>
+        </div>
+    </body>
+
+    <script src="/admin/plugins/mescroll/mescroll.min.js" type="text/javascript"
+        charset="utf-8"></script>
+    <!--mescroll本身不依赖jq,这里为了模拟发送ajax请求-->
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"
+        type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/plugins/layui/layui.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    var baseUrl = "http://193.112.17.59:4100";
+    var familySiteUrl = "https://family.1ziton.com/";
+    $(function () {
+        //创建MeScroll对象,内部已默认开启下拉刷新,自动执行up.callback,刷新列表数据;
+        var mescroll = new MeScroll("mescroll", {
+            //上拉加载的配置项
+            up: {
+                callback: getListData, //上拉回调,此处可简写; 相当于 callback: function (page) { getListData(page); }
+                isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+                noMoreSize: 4, //如果列表已无数据,可设置列表的总数量要大于半页才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看; 默认5
+                empty: {
+                    icon: "/admin/plugins/mescroll/res/img/mescroll-empty.png", //图标,默认null
+                    tip: "暂无相关数据~", //提示
+                    /*  btntext: "去逛逛 >", //按钮,默认""
+                     btnClick: function () {//点击按钮的回调,默认null
+                         alert("点击了按钮,具体逻辑自行实现");
+                     } */
+                },
+                clearEmptyId: "dataList", //相当于同时设置了clearId和empty.warpId; 简化写法;默认null; 注意vue中不能配置此项
+                toTop: { //配置回到顶部按钮
+                    src: "/admin/plugins/mescroll/res/img/mescroll-totop.png", //默认滚动到1000px显示,可配置offset修改
+                    //offset : 1000
+                },
+                lazyLoad: {
+                    use: true // 是否开启懒加载,默认false
+                }
+            },
+            down: {
+                callback: getListData //下拉刷新的回调,别写成downCallback(),多了括号就自动执行方法了
+            }
+        });
+
+        /*初始化菜单*/
+        var pdType = 0;//0:未出售，1一出事
+        var category = 'family';// family:方米立产品，factory：工厂产品
+        $(".nav p").click(function () {
+            var i = $(this).attr("i");
+            var cate = $(this).attr("category");
+            if (pdType != i || category!=cate) {
+                category=cate;
+                //更改列表条件
+                pdType = i;
+                $(".nav .active").removeClass("active");
+                $(this).addClass("active");
+                //重置列表数据
+                mescroll.resetUpScroll();
+                //隐藏回到顶部按钮
+                mescroll.hideTopBtn();
+            }
+        })
+
+        /*联网加载列表数据  page = {num:1, size:10}; num:当前页 从1开始, size:每页数据条数 */
+        function getListData(page) {
+            //联网加载数据
+            getListDataFromNet(pdType, category,page.num, page.size, function (curPageData, totalPage) {
+                // console.log("pdType=" + pdType + ", page.num=" + page.num + ", page.size=" + page.size + ", curPageData.length=" + curPageData.length);
+
+                mescroll.endByPage(curPageData.length, totalPage); //必传参数(当前页的数据个数, 总页数)
+
+                //设置列表数据
+                setListData(curPageData);
+            }, function (err) {
+                console.log(err)
+               /*  if (err.responseText.indexOf('登录') != -1) {
+                    location.href = '/login'
+                } */
+                //联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+                mescroll.endErr();
+            });
+        }
+
+        /*设置列表数据*/
+        function setListData(curPageData) {
+            var listDom = document.getElementById("dataList");
+            for (var i = 0; i < curPageData.length; i++) {
+                var pd = curPageData[i];
+                var reg = '<img src="(.*)"';
+                var imgUrl = '';
+                pd.content.replace(new RegExp(reg), function (imgStr, b, c, d) {
+                    imgStr.replace(new RegExp(reg), function (a, url, c, d) {
+                        // console.log(url);
+                        if(url.indexOf('http')==0){
+                            imgUrl = url;
+                        }else{
+                            imgUrl = baseUrl+ url;
+                        }
+                        
+                    });
+                });
+                var str = '<img class="pd-img" src="' + imgUrl + '"/>';
+                str += '<a href="' + pd.from + '" target="_blank"><span class="car-type">网上产品链接</span></a>';
+                if (pd.status == 0) {
+                    str += '<span class="operate-btn"><a href="javascript:void(0)" class="deal-order" id="' + pd._id + '">联系购买</a></span>';
+                }
+                str += '<p class="text"><a href="'+ familySiteUrl+'products_details/' + pd._id + '" style="color: #FF6990;"  target="_blank">' + pd.title + '</a></p>';
+                str += '<p class="text">提供时间：' + pd.supplyTime + '</p>';
+                str += '<p class="pd-sold">产品编号：' + pd.productNo + '</p>';
+                str += '<p class="pd-sold">方米立货号：' + pd.waybillId + '</p>';
+                str += '<p class="pd-sold">货物情况：' + (pd.description ? pd.description : '') + '</p>';
+
+                var liDom = document.createElement("li");
+                liDom.setAttribute('id', pd._id);
+                liDom.innerHTML = str;
+                listDom.appendChild(liDom);
+            }
+        }
+
+        layui.config({
+            base: '/admin/plugins/layui/modules/'
+        });
+
+       
+        layui.use(['icheck', 'laypage', 'layer'], function () {
+           
+                var $ = layui.jquery,
+                    laypage = layui.laypage,
+                    layer = parent.layer === undefined ? layui.layer : parent.layer;
+
+                $('#dataList').on('click', '.deal-order', function () {
+                    contact();
+                });
+                $('.btn-left').click(function(e){
+                    contact();
+                })
+                 function contact() {
+                      var obj = $(this);
+                     var id = obj.attr('id');
+                     var index = layer.open({
+                         title: "加微信联系购买",
+                         offset: ['70px', '15px'],
+                         content: '<img src="web/images/qr300.jpg"/>'
+                     });
+                 }
+        });
+
+        /*联网加载列表数据
+         在您的实际项目中,请参考官方写法: http://www.mescroll.com/api.html#tagUpCallback
+         请忽略getListDataFromNet的逻辑,这里仅仅是在本地模拟分页数据,本地演示用
+         实际项目以您服务器接口返回的数据为准,无需本地处理分页.
+         * */
+        function getListDataFromNet(pdType, category,pageNum, pageSize, successCallback, errorCallback) {
+            //延时一秒,模拟联网
+            setTimeout(function () {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl+'/web/get_products_by_status',
+                    data: {
+                        pageSize: pageSize,
+                        curr: pageNum,
+                        status: pdType,
+                        category: category,
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var listData = [];
+                        //pdType 全部商品0; 奶粉1; 面膜2; 图书3;
+                        //回调
+                        successCallback(data.data, data.total);
+                        if (pdType == 0) {
+                            if(category=='family'){
+                                $('#family_count').html(data.total)
+                            }else if(category=='factory'){
+                                $('#factory_count').html(data.total)
+                            }
+                        }
+                    },
+                    error: errorCallback
+                });
+            }, 1000)
+        }
+
+
+    });
+</script>
+</html>
