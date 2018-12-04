@@ -123,7 +123,7 @@
             font-size: 14px;
             position: absolute;
             right: 25px;
-            top: 47px;
+            top: 50px;
             padding: 1px 5px;
             border: solid 1px #18B4FE
         }
@@ -251,26 +251,25 @@
             var listDom = document.getElementById("dataList");
             for (var i = 0; i < curPageData.length; i++) {
                 var pd = curPageData[i];
-                var reg = '<img src="(.*)"';
-                var imgUrl = '';
-                pd.content.replace(new RegExp(reg), function (imgStr, b, c, d) {
-                    imgStr.replace(new RegExp(reg), function (a, url, c, d) {
-                        // console.log(url);
-                        if(url.indexOf('http')==0){
-                            imgUrl = url;
-                        }else{
-                            imgUrl = baseUrl+ url;
-                        }
-                        
-                    });
-                });
+                var imgUrl = ' ';
+                var imgReg = /<img.*?(?:>|\/>)/gi;
+                //匹配src属性
+                var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+                var arr = pd.content.match(imgReg);
+                // console.log('所有已成功匹配图片的数组：' + arr);
+                if (arr && arr[0]) {
+                    imgUrl = arr[0].match(srcReg)[1];
+                }
+                if(pd.supplyTime.indexOf('T')!==-1){
+                    pd.supplyTime = pd.supplyTime.split('T')[0];
+                }
                 var str = '<img class="pd-img" src="' + imgUrl + '"/>';
                 str += '<a href="' + pd.from + '" target="_blank"><span class="car-type">网上产品链接</span></a>';
                 if (pd.status == 0) {
                     str += '<span class="operate-btn"><a href="javascript:void(0)" class="deal-order" id="' + pd._id + '">联系购买</a></span>';
                 }
-                str += '<p class="text"><a href="'+ familySiteUrl+'products_details/' + pd._id + '" style="color: #FF6990;"  target="_blank">' + pd.title + '</a></p>';
-                str += '<p class="text">提供时间：' + pd.supplyTime + '</p>';
+                str += '<p class="text"><a href="/details.html?id=' + pd._id + '" style="color: #FF6990;"  target="_blank">' + pd.title + '</a></p>';
+                str += '<p class="text" style="margin-top:5px;">提供时间：' + pd.supplyTime + '</p>';
                 str += '<p class="pd-sold">产品编号：' + pd.productNo + '</p>';
                 str += '<p class="pd-sold">方米立货号：' + pd.waybillId + '</p>';
                 str += '<p class="pd-sold">货物情况：' + (pd.description ? pd.description : '') + '</p>';

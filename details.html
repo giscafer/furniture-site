@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>饭团产品</title>
+
+        <!--layui后面添加的-->
+        <link href="/web/layui/css/layui.css" rel="stylesheet">
+        <!-- core CSS -->
+        <link href="/web/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/web/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/web/css/animate.min.css" rel="stylesheet">
+        <link href="/web/css/prettyPhoto.css" rel="stylesheet">
+        <link href="/web/css/main.css" rel="stylesheet">
+        <link href="/web/css/responsive.css" rel="stylesheet">
+        <link rel="stylesheet" href="/web/css/productlist1.css">
+        <!--[if lt IE 9]>
+    <script src="/web/js/html5shiv.js"></script>
+    <script src="/web/js/respond.min.js"></script>
+    <![endif]-->
+        <link rel="shortcut icon" href="/web/images/ico/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144"
+            href="/web/images/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114"
+            href="/web/images/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72"
+            href="/web/images/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed"
+            href="/web/images/ico/apple-touch-icon-57-precomposed.png">
+    </head>
+    <!--/head-->
+
+    <body class="homepage" style="overflow-x: hidden;">
+
+        <header id="header" class="site-header">
+
+
+            <nav class="navbar navbar-inverse" role="banner">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/">
+                            <h2 style="font-size: 22px;color: #fff;line-height:
+                                10px;">产品详情</h2>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <section id="feature">
+            <div class="container">
+                <div class="row">
+                    <div class="features">
+                        <div class="col-md-9 col-sm-6 wow fadeInDown"
+                            data-wow-duration="1000ms" data-wow-delay="100ms">
+                            <h3 class="ab_right_title font_size_12">
+                                <span>您的位置：<a href="/" class="a_little_tip">首页</a>
+                                    > <a href="#" class="a_little_tip">产品详情</a>
+                                </span>
+                            </h3>
+
+                            <div id="tabContent">
+
+                            </div>
+                        </div>
+                        <!--/.col-md-4-->
+                    </div>
+                    <!--/.services-->
+                </div>
+                <!--/.row-->
+            </div>
+            <!--/.container-->
+        </section>
+        <!--/#feature-->
+
+        <section id="bottom">
+            <div class="container wow fadeInDown" data-wow-duration="1000ms"
+                data-wow-delay="100ms">
+                <div class="row">
+                </div>
+            </div>
+        </section>
+        <!--/#bottom-->
+
+        <footer id="footer" class="midnight-blue">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Copyright &copy;<a href="web/images/qr300.jpg"
+                            target="_blank">giscafer</a>
+                    </div>
+                    <div class="col-sm-6">
+                        <ul class="pull-right">
+                            <li><a href="/">首页</a></li>
+                            <li><a href="web/images/qr300.jpg" target="_blank">联系购买</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--/#footer-->
+
+        <script src="/web/js/jquery.js"></script>
+        <script src="/web/js/bootstrap.min.js"></script>
+        <script src="/web/js/jquery.prettyPhoto.js"></script>
+        <script src="/web/js/jquery.isotope.min.js"></script>
+        <script src="/web/js/main.js"></script>
+        <script src="/web/js/wow.min.js"></script>
+    </body>
+
+</html>
+<!--jquery修改首页导航样式-->
+<script type="text/javascript" src="/web/layui/layui.js"></script>
+<!--jquery修改首页导航样式-->
+<script>
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'laypage', 'form'], function () {
+        var layer = layui.layer
+            , laypage = layui.laypage
+            , $ = layui.jquery;
+
+        //页面初始化的时候执行
+        $(function () {
+            var url = location.href;
+            var search=location.search;
+            var id=search.split('=')[1];
+            var familyBaseUrl= "http://193.112.17.59:4100"+"/products_details/"+id;
+            console.log(familyBaseUrl)
+            getData(familyBaseUrl);
+        });
+
+        //从后台获取数据函数，获取页数curr的数据
+        function getData(url) {
+            $.post(url, function (result) {
+                //获取后台json数据
+                var mydata = result.data;
+                var price = result.category=='family'? mydata.price:(Number(mydata.price)+200);
+                var fromStr = '</br></br>';
+                var from = mydata.from ? mydata.from.substr(0, 60) : mydata.from;
+                if (from.length > 8) {
+                    fromStr = '</br></br><p style="text-align: left">网上产品链接：<a target="_blank" href="' + mydata.from + '" style="color: blue;">' + from + '</a></p>';
+                }
+                var products_str = '</br><div style="text-align: center"><strong style="font-size: 20px">' + mydata.title + '</strong>' +
+                    fromStr +
+                    '<p style="text-align: left"> 产品提供日期：' + mydata.supplyTime + '</p>' +
+                    '<p style="text-align: left"> 产品编号: ' + mydata.productNo + '</p>' +
+                    '<p style="text-align: left"> 现卖价格: <span class="price">￥' + price + '</span></p>' +
+                    '</div>' + mydata.content;
+                //将拼接好的数据填入#tabContent中
+                $("#tabContent").html(products_str);
+
+                document.title = mydata.title + '| 饭团产品';
+            });
+        };
+    });
+</script>

@@ -111,7 +111,7 @@ a:focus {
 }
 
 body>section {
-    padding: 170px 0;
+    padding: 60px 0 15px 0;
 }
 
 .center {
@@ -266,8 +266,8 @@ input.search-form:hover {
 .navbar {
     border-radius: 0;
     margin-bottom: 0;
-    background: #151515;
-    padding: 15px 0;
+    background: #009688;
+    /* padding: 15px 0; */
     padding-bottom: 0;
 }
 
@@ -2521,10 +2521,10 @@ shortcodes page css
 }
 
 #footer {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     color: #fff;
-    background: #2e2e2e;
+    background: #555;
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -2593,4 +2593,16 @@ shortcodes page css
     text-align: center;
     font-size: 18px;
     color: #c52d2f;
+}
+
+.price {
+    color: #c52d2f;
+}
+
+.navbar {
+    border-radius: 0;
+    margin-bottom: 0;
+    background: #009688;
+    /* padding: 15px 0; */
+    padding-bottom: 0;
 }
