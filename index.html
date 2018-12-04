@@ -260,6 +260,9 @@
                 if (arr && arr[0]) {
                     imgUrl = arr[0].match(srcReg)[1];
                 }
+                if(imgUrl.indexOf('http')===-1){
+                    imgUrl=baseUrl + imgUrl;
+                }
                 if(pd.supplyTime.indexOf('T')!==-1){
                     pd.supplyTime = pd.supplyTime.split('T')[0];
                 }

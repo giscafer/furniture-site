@@ -125,6 +125,7 @@
 <script type="text/javascript" src="/web/layui/layui.js"></script>
 <!--jquery修改首页导航样式-->
 <script>
+    var familyBaseUrl = 'http://193.112.17.59:4100';
     //一般直接写在一个js文件中
     layui.use(['layer', 'laypage', 'form'], function () {
         var layer = layui.layer
@@ -147,9 +148,8 @@
             var url = location.href;
             var search=location.search;
             var id=search.split('=')[1];
-            var familyBaseUrl= "http://193.112.17.59:4100"+"/products_details/"+id;
-            console.log(familyBaseUrl)
-            getData(familyBaseUrl);
+            var endpoit= familyBaseUrl+"/products_details/"+id;
+            getData(endpoit);
 
             $('.contact').click(function (e) {
                 contact();
@@ -164,6 +164,7 @@
                 var price = result.category=='family'? mydata.price:(Number(mydata.price)+200);
                 var fromStr = '</br></br>';
                 var from = mydata.from ? mydata.from.substr(0, 60) : mydata.from;
+                var content=mydata.content.replace(/\/images\/ueditor\//g,familyBaseUrl+'/images/ueditor/');
                 if (from.length > 8) {
                     fromStr = '</br></br><p style="text-align: left">网上产品链接：<a target="_blank" href="' + mydata.from + '" style="color: blue;">' + from + '</a></p>';
                 }
@@ -172,7 +173,7 @@
                     '<p style="text-align: left"> 产品提供日期：' + mydata.supplyTime + '</p>' +
                     '<p style="text-align: left"> 产品编号: ' + mydata.productNo + '</p>' +
                     '<p style="text-align: left"> 现卖价格: <span class="price">￥' + price + '</span></p>' +
-                    '</div>' + mydata.content;
+                    '</div>' + content;
                 //将拼接好的数据填入#tabContent中
                 $("#tabContent").html(products_str);
 
