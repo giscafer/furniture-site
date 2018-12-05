@@ -2606,3 +2606,11 @@ shortcodes page css
     /* padding: 15px 0; */
     padding-bottom: 0;
 }
+
+@media(min-width: 768px) {
+    .container>.navbar-header {
+        margin-right: 0;
+        margin-left: 0;
+        min-width: 600px;
+    }
+}
