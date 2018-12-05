@@ -2596,7 +2596,8 @@ shortcodes page css
 }
 
 .price {
-    color: #c52d2f;
+    color: red;
+    font-size: 16px;
 }
 
 .navbar {
