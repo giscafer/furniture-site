@@ -164,7 +164,19 @@
             $.post(url, function (result) {
                 //获取后台json数据
                 var mydata = result.data;
-                var price = result.category=='family'? mydata.price:(Number(mydata.price)+200);
+                var pd = result.data;
+                var price = + pd.price;
+                if (pd.category == 'factory' && pd._id !== '5c07355382e1f10013735e41' && pd._id !== '5c0734e182e1f10013735e40') {
+                    if (price >= 1500) {
+                        price = price + 300;
+                    } else if (price > 900) {
+                        price = price + 250;
+                    } else if (price > 600) {
+                        price = price + 200;
+                    } else if (price > 400) {
+                        price = price + 150;
+                    }
+                }
                 var fromStr = '</br></br>';
                 var from = mydata.from ? mydata.from.substr(0, 60) : mydata.from;
                 var content=mydata.content.replace(/\/images\/ueditor\//g,familyBaseUrl+'/images/ueditor/');
