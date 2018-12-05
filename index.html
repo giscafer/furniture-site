@@ -62,7 +62,11 @@
             right: 0;
             padding: 12px 6px;
         }
-
+        .origin-price{
+            font-size: 14px;
+            text-decoration: line-through;
+            color: gray;
+        }
         .header .tip {
             margin-top: 4px;
             font-size: 12px;
@@ -301,6 +305,11 @@
                 // console.log('=============')
                 // var price = pd.category == 'family' ? pd.price : (Number(pd.price) + 200);
                 // var str = '<img class="pd-img" src="' + imgUrl + '"/>';
+
+                var originalPrice='';
+                if(pd.category=='family' && pd.refPrice){
+                    originalPrice = '<p class="origin-price" style="margin-top:5px;">网上原价：￥'+ pd.refPrice +'</p>';
+                }
                 var str = '<a href="/details.html?id=' + pd._id + '" style="color: #FF6990;"  target="_blank"><img class="pd-img" src="' + imgUrl + '"/></a>';
               
                 str += '<p class="text"><a href="/details.html?id=' + pd._id + '" style="color: #FF6990;"  target="_blank">' + pd.title + '</a></p>';
@@ -309,6 +318,7 @@
                 // str += '<p class="pd-sold">产品编号：' + pd.productNo + '</p>';
                 str += '<div class="btn-container"><span class="pd-sold">促销价： <span class="price">￥' + price + '</span> （不含邮费）</span>';
                 str += '<a href="javascript:void(0)" class="operate-btn deal-order"  id="' + pd._id + '">联系购买</a></div>';
+                str+= originalPrice;
                 var liDom = document.createElement("li");
                 liDom.setAttribute('id', pd._id);
                 liDom.innerHTML = str;

@@ -177,8 +177,12 @@
                         price = price + 150;
                     }
                 }
-                if (pd._id !== '5c07355382e1f10013735e41' || pd._id !== '5c0734e182e1f10013735e40') {
+                if (pd.category == 'factory' && (pd._id == '5c07355382e1f10013735e41' || pd._id  == '5c0734e182e1f10013735e40')) {
                     price = price + 200;
+                }
+                var refPricesTR = '';
+                if (mydata.refPrice && mydata.category == 'family') {
+                    refPricesTR = '<p style="text-align: left;font-size:18px;"> 原网上价格: <span class="price1">￥' + mydata.refPrice + '</span></p>';
                 }
                 var fromStr = '</br></br>';
                 var from = mydata.from ? mydata.from.substr(0, 60) : mydata.from;
@@ -190,7 +194,8 @@
                     fromStr +
                     '<p style="text-align: left"> 产品提供日期：' + mydata.supplyTime + '</p>' +
                     '<p style="text-align: left"> 产品编号: ' + mydata.productNo + '</p>' +
-                    '<p style="text-align: left"> 现卖价格: <span class="price">￥' + price + '</span>（不含邮费）</p>' +
+                    '<p style="text-align: left;font-size:18px;"> 现卖价格: <span class="price">￥' + price + '</span>（不含邮费）</p>' +
+                    refPricesTR+
                     '</div>' + content;
                 //将拼接好的数据填入#tabContent中
                 $("#tabContent").html(products_str);
