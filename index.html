@@ -281,6 +281,21 @@
                 if(pd.supplyTime.indexOf('T')!==-1){
                     pd.supplyTime = pd.supplyTime.split('T')[0];
                 }
+                var price = +pd.price;
+                console.log('price='+ price)
+                if(pd.category == 'factory'){
+                    if(price >= 1500){
+                        price = price + 300;
+                    }else if(price > 900){
+                        price = price + 250;
+                    }else if(price > 600){
+                        price = price + 200;
+                    }else if (price > 400) {
+                        price = price + 150;
+                    }
+                }
+                console.log('price2=' + price)
+                console.log('=============')
                 var price = pd.category == 'family' ? pd.price : (Number(pd.price) + 200);
                 // var str = '<img class="pd-img" src="' + imgUrl + '"/>';
                 var str = '<a href="/details.html?id=' + pd._id + '" style="color: #FF6990;"  target="_blank"><img class="pd-img" src="' + imgUrl + '"/></a>';
