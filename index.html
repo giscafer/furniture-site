@@ -169,7 +169,7 @@
             <div class="nav">
                 <p i="0" category="factory" class="active">工厂产品(<span
                         id="factory_count">*</span>)</p>
-                <p i="0" category="family">饭团产品(<span
+                <p i="0" category="family">促销产品(<span
                         id="family_count">*</span>)</p>
                 <!-- <p i="1">已售产品</p> -->
             </div>
@@ -330,7 +330,7 @@
                 $('.btn-left').click(function(e){
                     contact();
                 })
-                 function contact() {
+                function contact() {
                       var obj = $(this);
                      var id = obj.attr('id');
                      var index = layer.open({
@@ -338,7 +338,42 @@
                          offset: ['70px', '15px'],
                          content: '<img src="web/images/qr300.jpg"/>'
                      });
-                 }
+                }
+
+               var infoContent= ['<div class="info">',
+                '    <h2>购买须知</h2>',
+                '    <div>',
+                '        <h4>什么是工厂产品？</h4>',
+                '        <span>',
+                '            工厂直接进货，工厂价格，无平台佣金，无中间商差价，便宜划算；有些产品在详情页面里提供了对应淘宝天猫店的同款产品链接，可以自行了解价格差异',
+                '        </span>',
+                '        <h4>什么是促销产品？</h4>',
+                '        <span>',
+                '            本产品一般为那种滞留、磨损产品，但不会影响使用的产品；比如真皮沙发，运送过程有个角磨掉漆了。这类产品在详情页面中可以详细看到磨损程度（我们不卖不能使用的产品），此类产品提供量很少，一般都会售完。存在那种原价格很高，但是磨损后价格比较低，性价比很高。',
+                '        </span>',
+                '        <span style="font-weight:bold">重点提醒：此产品是新品磨损，不是二手货！</span>',
+                '    </div>',
+                '    <h2>购买推荐</h2>',
+                '    <div>',
+                '        <h4>什么客户购买促销产品的多？</h4>',
+                '        <p>较多有出租房子的朋友，购买促销产品，高质量高品牌的家居用品，只是在运送过程磨损一点，不影响使用和美观。</p>',
+                '        <h4>什么客户购买工厂产品的多？</h4>',
+                '        <p>刚需，不走网店，省下很多钱。</p>',
+                '    </div>',
+                '</div>'].join("");
+                function showInfo() {
+                    var index = layer.open({
+                        title: "购买须知",
+                        // area: [null, '521px'],
+                        zIndex:10000,
+                        // offset: ['70px', '16px'],
+                        content: infoContent
+                    });
+                }
+
+                $('.btn-right').click(function(e){
+                    showInfo()();
+                })
         });
 
         /*联网加载列表数据
