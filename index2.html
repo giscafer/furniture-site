@@ -71,7 +71,7 @@
 
         .header .nav p {
             display: inline-block;
-            width: 40%;
+            width: 30%;
             padding: 5px 0;
         }
 
@@ -79,9 +79,7 @@
             border-bottom: 1px solid #FF6990;
             color: #FF6990;
         }
-        .price{
-            color: red;
-        }
+
         /*列表*/
         .mescroll {
             position: fixed;
@@ -93,16 +91,16 @@
         /*展示上拉加载的数据列表*/
         .data-list li {
             position: relative;
-            padding: 10px 8px 10px 10px;
+            padding: 10px 8px 10px 120px;
             border-bottom: 1px solid #eee;
         }
 
         .data-list .pd-img {
-            /* position: absolute; */
+            position: absolute;
             left: 18px;
             top: 18px;
-            width: 100%;
-            height: 128px;
+            width: 80px;
+            height: 80px;
         }
 
         .data-list .pd-name {
@@ -121,16 +119,11 @@
             font-size: 14px;
         }
 
-        .data-list .btn-container{
-            height: 20px;
-            margin-top: 5px;
-        }
-
         .data-list .operate-btn {
-            display: block;
             font-size: 14px;
-            float: right;
-            margin-right: 20px;
+            position: absolute;
+            right: 25px;
+            top: 50px;
             padding: 1px 5px;
             border: solid 1px #18B4FE
         }
@@ -163,8 +156,8 @@
                 <p i="0" category="factory" class="active">工厂产品(<span
                         id="factory_count">*</span>)</p>
                 <p i="0" category="family">饭团产品(<span
-                        id="family_count">*</span>)</p>
-                <!-- <p i="1">已售产品</p> -->
+                        id="family_count">0</span>)</p>
+                <p i="1">已售产品</p>
             </div>
         </div>
         <!--滑动区域-->
@@ -195,7 +188,7 @@
                 noMoreSize: 4, //如果列表已无数据,可设置列表的总数量要大于半页才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看; 默认5
                 empty: {
                     icon: "/admin/plugins/mescroll/res/img/mescroll-empty.png", //图标,默认null
-                    tip: "产品已卖完，请关注上新~", //提示
+                    tip: "暂无相关数据~", //提示
                     /*  btntext: "去逛逛 >", //按钮,默认""
                      btnClick: function () {//点击按钮的回调,默认null
                          alert("点击了按钮,具体逻辑自行实现");
@@ -221,7 +214,7 @@
         $(".nav p").click(function () {
             var i = $(this).attr("i");
             var cate = $(this).attr("category");
-            if (category!=cate) {
+            if (pdType != i || category!=cate) {
                 category=cate;
                 //更改列表条件
                 pdType = i;
@@ -274,17 +267,17 @@
                 if(pd.supplyTime.indexOf('T')!==-1){
                     pd.supplyTime = pd.supplyTime.split('T')[0];
                 }
-                var price = pd.category == 'family' ? pd.price : (Number(pd.price) + 200);
-
-                // var str = '<img class="pd-img" src="' + imgUrl + '"/>';
-                var str = '<a href="/details.html?id=' + pd._id + '" style="color: #FF6990;"  target="_blank"><img class="pd-img" src="' + imgUrl + '"/></a>';
-              
+                var str = '<img class="pd-img" src="' + imgUrl + '"/>';
+                str += '<a href="' + pd.from + '" target="_blank"><span class="car-type">网上产品链接</span></a>';
+                if (pd.status == 0) {
+                    str += '<span class="operate-btn"><a href="javascript:void(0)" class="deal-order" id="' + pd._id + '">联系购买</a></span>';
+                }
                 str += '<p class="text"><a href="/details.html?id=' + pd._id + '" style="color: #FF6990;"  target="_blank">' + pd.title + '</a></p>';
-                str += '<p class="pd-sold" style="margin-top:5px;">提供时间：' + pd.supplyTime + 
-                '<span class="pd-sold" style="margin-left:15px;"> &nbsp;&nbsp;货物情况：' + (pd.description ? pd.description : '') + '</span>'+'</p>';
-                // str += '<p class="pd-sold">产品编号：' + pd.productNo + '</p>';
-                str += '<div class="btn-container"><span class="pd-sold">促销价： <span class="price">￥' + price + '</span> （不含邮费）</span>';
-                str += '<a href="javascript:void(0)" class="operate-btn deal-order"  id="' + pd._id + '">联系购买</a></div>';
+                str += '<p class="text" style="margin-top:5px;">提供时间：' + pd.supplyTime + '</p>';
+                str += '<p class="pd-sold">产品编号：' + pd.productNo + '</p>';
+                str += '<p class="pd-sold">方米立货号：' + pd.waybillId + '</p>';
+                str += '<p class="pd-sold">货物情况：' + (pd.description ? pd.description : '') + '</p>';
+
                 var liDom = document.createElement("li");
                 liDom.setAttribute('id', pd._id);
                 liDom.innerHTML = str;
