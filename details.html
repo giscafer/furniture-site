@@ -166,7 +166,7 @@
                 var mydata = result.data;
                 var pd = result.data;
                 var price = + pd.price;
-                if (pd.category == 'factory' && pd._id !== '5c07355382e1f10013735e41' && pd._id !== '5c0734e182e1f10013735e40') {
+                if (pd.category == 'factory' && pd._id !== '5c07355382e1f10013735e41' && pd._id !== '5c0734e182e1f10013735e40' && !isNaN(price)) {
                     if (price >= 1500) {
                         price = price + 300;
                     } else if (price > 900) {
@@ -176,6 +176,9 @@
                     } else if (price > 400) {
                         price = price + 150;
                     }
+                }
+                if(isNaN(price)){
+                    price= pd.refPrice.split('~');
                 }
                 if (pd.category == 'factory' && (pd._id == '5c07355382e1f10013735e41' || pd._id  == '5c0734e182e1f10013735e40')) {
                     price = price + 200;
