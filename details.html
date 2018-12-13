@@ -31,6 +31,13 @@
             href="/web/images/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed"
             href="/web/images/ico/apple-touch-icon-57-precomposed.png">
+        <style>
+             .origin-price{
+                font-size: 14px;
+                text-decoration: line-through;
+                color: gray;
+            }
+        </style>
     </head>
     <!--/head-->
 
@@ -184,8 +191,11 @@
                     price = price + 200;
                 }
                 var refPricesTR = '';
-                if (mydata.refPrice && mydata.category == 'family') {
-                    refPricesTR = '<p style="text-align: left;font-size:18px;"> 原网上价格: <span class="price1">￥' + mydata.refPrice + '</span></p>';
+                if ((mydata.refPrice || mydata.shopPrice) && mydata.category == 'family') {
+                    refPricesTR = '<p class="origin-price" style="text-align: left;font-size:18px;"> 网上原价: <span class="price1">￥' + (mydata.shopPrice || mydata.refPrice) + '</span></p>';
+                }
+                if (mydata.shopPrice && mydata.category == 'factory') {
+                    refPricesTR = '<p class="origin-price" style="text-align: left;font-size:18px;"> 网上原价: <span class="price1">￥' + mydata.shopPrice + '</span></p>';
                 }
                 var fromStr = '</br></br>';
                 var from = mydata.from ? mydata.from.substr(0, 60) : mydata.from;
